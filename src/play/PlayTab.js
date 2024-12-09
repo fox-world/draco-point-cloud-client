@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import LinearProgress from '@mui/material/LinearProgress';
 
+import startDracoPlay from './play';
 import PlayButton from './PlayButton';
 
 function PlayTabPanel(props) {
@@ -38,18 +39,9 @@ function playTabProps(index) {
   };
 }
 
-let dracoInteval;
-const startDracoPlay = (props, callback) => {
-  let progress = props.progress2;
-  dracoInteval = setInterval(() => {
-    progress = progress + 1;
-    if (progress >= 100) {
-      progress = 0;
-      props.disabled2 = 0;
-      clearInterval(dracoInteval);
-    }
-    callback({ ...props, 'progress2': progress });
-  }, 200);
+var interval = {
+  'interval1': null,
+  'interval2': null
 }
 
 export function PlayTabs() {
@@ -73,7 +65,7 @@ export function PlayTabs() {
     }
     if (tabIndex == 1) {
       state.disabled2 = 1;
-      startDracoPlay(state, setState);
+      startDracoPlay(state, setState, interval);
     }
   };
 
@@ -83,7 +75,7 @@ export function PlayTabs() {
     if (tabIndex == 1) {
       console.log("processs2:\t" + state.progress2);
       setState({ ...state, 'disabled2': 0 });
-      clearInterval(dracoInteval);
+      clearInterval(interval['interval2']);
     }
   };
 
