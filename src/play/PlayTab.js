@@ -8,7 +8,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
 
-import { startPcdPlay, startDracoPlay } from './play';
+import { startPcdPlay, startDracoPlay } from './playFunc';
 import PlayButton from './PlayButton';
 
 function PlayTabPanel(props) {
