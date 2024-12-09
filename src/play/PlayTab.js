@@ -4,9 +4,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import LinearProgress from '@mui/material/LinearProgress';
+import Typography from '@mui/material/Typography';
 
-import startDracoPlay from './play';
+import { startPcdPlay, startDracoPlay } from './play';
 import PlayButton from './PlayButton';
 
 function PlayTabPanel(props) {
@@ -58,21 +60,20 @@ export function PlayTabs() {
   };
 
   const startPlayClick = (tabIndex) => {
-    if (tabIndex == 0) {
-      let progress = state.progress1 + 5;
-      setState({ ...state, 'progress1': progress });
-      return;
+    if (tabIndex === 0) {
+      state.disabled1 = 1;
+      startPcdPlay(state, setState, interval);
     }
-    if (tabIndex == 1) {
+    if (tabIndex === 1) {
       state.disabled2 = 1;
       startDracoPlay(state, setState, interval);
     }
   };
 
   const stopPlayClick = (tabIndex) => {
-    if (tabIndex == 0) {
+    if (tabIndex === 0) {
     }
-    if (tabIndex == 1) {
+    if (tabIndex === 1) {
       console.log("processs2:\t" + state.progress2);
       setState({ ...state, 'disabled2': 0 });
       clearInterval(interval['interval2']);
@@ -93,8 +94,11 @@ export function PlayTabs() {
       </Box>
       <PlayTabPanel value={tabValue} index={0}>
         <Alert severity="warning" icon={false}>
-          不用<b>Draco</b>播放
-          &nbsp;<PlayButton index={0} size="small" onClick={startPlayClick} name='播放' />
+          <AlertTitle><b>pcd</b>播放</AlertTitle>
+          <Typography gutterBottom>
+            直接播放<b>pcd</b>点云文件，传输过程中数据包体积较大
+          </Typography>
+          &nbsp;<PlayButton index={0} size="small" disabled={state.disabled1} onClick={startPlayClick} name='播放' />
           &nbsp;<PlayButton index={0} size="small" color="info" onClick={stopPlayClick} name='暂停' />
         </Alert>
         <br />
@@ -102,13 +106,16 @@ export function PlayTabs() {
       </PlayTabPanel>
       <PlayTabPanel value={tabValue} index={1}>
         <Alert severity="info" icon={false}>
-          利用<b>Draco</b>播放
+          <AlertTitle><b>drc</b>播放</AlertTitle>
+          <Typography gutterBottom>
+            利用<b>Draco</b>将<b>pcd</b>文件转化为<b>drc</b>文件进行播放，减少传输过程中的数据包体积大小
+          </Typography>
           &nbsp;<PlayButton index={1} disabled={state.disabled2} onClick={startPlayClick} name='播放' />
           &nbsp;<PlayButton index={1} size="small" color="info" onClick={stopPlayClick} name='暂停' />
         </Alert>
         <br />
         <LinearProgress variant="determinate" value={state.progress2} color="success" />
       </PlayTabPanel>
-    </Box>
+    </Box >
   );
 }
