@@ -57,6 +57,12 @@ export function PlayTabs() {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+    if (newValue === 0) {
+      stopPlayClick(1);
+    }
+    if (newValue === 1) {
+      stopPlayClick(0);
+    }
   };
 
   const startPlayClick = (tabIndex) => {
