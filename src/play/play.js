@@ -8,7 +8,7 @@ export const startPcdPlay = (props, callback, interval) => {
             clearInterval(interval['interval1']);
         }
         callback({ ...props, 'progress1': progress });
-    }, 100);
+    }, 300);
 };
 
 export const startDracoPlay = (props, callback, interval) => {
