@@ -1,28 +1,28 @@
 import * as THREE from 'three';
-
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
 
-export const playPcd = (id) => {
+let camera, scene, renderer;
+let parent, width, height;
+
+export const playPcd = (pId, pWidth, pHeight) => {
     let pcd = 'http://127.0.0.1:8080/000001.pcd';
-    loadPcd(pcd, id);
+    height = pHeight;
+    width = pWidth;
+    parent = document.getElementById(`${pId}`);
+    loadPcd(pcd);
     render();
 };
 
-
-let camera, scene, renderer, parent;
-function loadPcd(pcd, id) {
-
-    parent = document.getElementById(`${id}`);
-
+function loadPcd(pcd) {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     parent.appendChild(renderer.domElement);
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(12, window.innerWidth / window.innerHeight, 0.5, 50000);
+    camera = new THREE.PerspectiveCamera(12, width / height, 0.5, 50000);
     camera.position.z = 310;
     scene.add(camera);
 
@@ -45,10 +45,10 @@ function loadPcd(pcd, id) {
         points.name = '000001.pcd';
 
         // 沿y轴方向平移一定单位
-        points.translateY(10);
+        //points.translateY(10);
 
         // 图像缩放
-        points.scale.set(1.1, 1.1, 1.1);
+        points.scale.set(1.2, 1.2, 1.2);
         scene.add(points);
 
         render();
@@ -57,9 +57,9 @@ function loadPcd(pcd, id) {
 }
 
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     render();
 }
 
