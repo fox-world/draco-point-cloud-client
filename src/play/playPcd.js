@@ -5,11 +5,11 @@ import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
 let camera, scene, renderer;
 let parent, width, height;
 
-export const playPcd = (pId, pWidth, pHeight) => {
+export const playPcd = (pId, pHeight) => {
     let pcd = 'http://127.0.0.1:8080/000001.pcd';
     height = pHeight;
-    width = pWidth;
     parent = document.getElementById(`${pId}`);
+    width = parent.offsetWidth;
     loadPcd(pcd);
     render();
 };

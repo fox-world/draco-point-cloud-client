@@ -48,7 +48,7 @@ var interval = {
   'interval1': null
 }
 
-const { innerWidth: width,innerHeight: height } = window;
+const { innerHeight: height } = window;
 const playAreaHeight = height - 240;
 const play_pcd_id = 'play_pcd';
 
@@ -77,7 +77,7 @@ export function PlayTabs() {
     if (tabIndex === 0) {
       state.disabled0 = 1;
       setShowContent(false);
-      playPcd(play_pcd_id, width, playAreaHeight)
+      playPcd(play_pcd_id, playAreaHeight)
       //startPcdPlay(state, setState, interval);
     }
     if (tabIndex === 1) {
