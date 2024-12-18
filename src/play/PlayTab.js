@@ -1,16 +1,17 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import Box from '@mui/material/Box';
 import LinearProgress from '@mui/material/LinearProgress';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import { loadPcd } from './playPcd'
-
-import { startPcdPlay, startDracoPlay } from './playFunc';
+import PropTypes from 'prop-types';
+import * as React from 'react';
+import PlayArea from './playArea';
 import PlayButton from './PlayButton';
+
+import { startDracoPlay } from './playFunc';
+import { playPcd } from './playPcd'
 
 function PlayTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -49,21 +50,12 @@ var interval = {
 
 const { innerHeight: height } = window;
 const playAreaHeight = height - 240;
-const playAreaStyle = {
-  border: '1px dashed #d0d0d0',
-  marginTop: '5px',
-  minHeight: `${playAreaHeight}px`,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontWeight: 'bold',
-  //opacity: '0.5',
-  //backgroundColor: '#d0d0d0'
-};
+const play_pcd_id = 'play_pcd';
 
 export function PlayTabs() {
 
   const [tabValue, setTabValue] = React.useState(0);
+  const [showContent, setShowContent] = React.useState(true);
   const [state, setState] = React.useState({
     progress0: 0,
     progress1: 0,
@@ -84,7 +76,8 @@ export function PlayTabs() {
   const startPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
       state.disabled0 = 1;
-      loadPcd('http://127.0.0.1:8080/000001.pcd')
+      setShowContent(false);
+      playPcd(play_pcd_id)
       //startPcdPlay(state, setState, interval);
     }
     if (tabIndex === 1) {
@@ -126,7 +119,7 @@ export function PlayTabs() {
           &nbsp;<PlayButton index={0} size="small" color="info" onClick={stopPlayClick} name='暂停' />
         </Alert>
         <LinearProgress variant="determinate" value={state.progress0} color="success" sx={{ my: '10px' }} />
-        <div id="pcd_play" style={playAreaStyle}>点云展示区域</div>
+        <PlayArea id={play_pcd_id} content="直接播放Pcd" minHeight={playAreaHeight} showContent={showContent} />
       </PlayTabPanel>
       <PlayTabPanel value={tabValue} index={1}>
         <Alert severity="info" icon={false}>

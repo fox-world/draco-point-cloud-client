@@ -3,16 +3,17 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
 
-export const loadPcd = (pcd) => {
-    init(pcd);
+export const playPcd = (id) => {
+    let pcd = 'http://127.0.0.1:8080/000001.pcd';
+    loadPcd(pcd, id);
     render();
 };
 
 
 let camera, scene, renderer, parent;
-function init(pcd) {
+function loadPcd(pcd, id) {
 
-    parent = document.getElementById("pcd_play");
+    parent = document.getElementById(`${id}`);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
