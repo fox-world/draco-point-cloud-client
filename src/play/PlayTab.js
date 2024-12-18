@@ -7,6 +7,7 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import LinearProgress from '@mui/material/LinearProgress';
 import Typography from '@mui/material/Typography';
+import { loadPcd } from './playPcd'
 
 import { startPcdPlay, startDracoPlay } from './playFunc';
 import PlayButton from './PlayButton';
@@ -68,7 +69,8 @@ export function PlayTabs() {
   const startPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
       state.disabled0 = 1;
-      startPcdPlay(state, setState, interval);
+      loadPcd('http://127.0.0.1:8080/000001.pcd')
+      //startPcdPlay(state, setState, interval);
     }
     if (tabIndex === 1) {
       state.disabled1 = 1;
