@@ -9,13 +9,15 @@ export const loadPcd = (pcd) => {
 };
 
 
-let camera, scene, renderer;
+let camera, scene, renderer, parent;
 function init(pcd) {
+
+    parent = document.getElementById("pcd_play");
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+    parent.appendChild(renderer.domElement);
 
     scene = new THREE.Scene();
 

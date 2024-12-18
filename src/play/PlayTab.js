@@ -47,7 +47,22 @@ var interval = {
   'interval1': null
 }
 
+const { innerHeight: height } = window;
+const playAreaHeight = height - 240;
+const playAreaStyle = {
+  border: '1px dashed #d0d0d0',
+  marginTop: '5px',
+  minHeight: `${playAreaHeight}px`,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontWeight: 'bold',
+  //opacity: '0.5',
+  //backgroundColor: '#d0d0d0'
+};
+
 export function PlayTabs() {
+
   const [tabValue, setTabValue] = React.useState(0);
   const [state, setState] = React.useState({
     progress0: 0,
@@ -110,8 +125,8 @@ export function PlayTabs() {
           &nbsp;<PlayButton index={0} size="small" disabled={state.disabled0} onClick={startPlayClick} name='播放' />
           &nbsp;<PlayButton index={0} size="small" color="info" onClick={stopPlayClick} name='暂停' />
         </Alert>
-        <br />
-        <LinearProgress variant="determinate" value={state.progress0} color="success" />
+        <LinearProgress variant="determinate" value={state.progress0} color="success" sx={{ my: '10px' }} />
+        <div id="pcd_play" style={playAreaStyle}>点云展示区域</div>
       </PlayTabPanel>
       <PlayTabPanel value={tabValue} index={1}>
         <Alert severity="info" icon={false}>
@@ -122,8 +137,7 @@ export function PlayTabs() {
           &nbsp;<PlayButton index={1} disabled={state.disabled1} onClick={startPlayClick} name='播放' />
           &nbsp;<PlayButton index={1} size="small" color="info" onClick={stopPlayClick} name='暂停' />
         </Alert>
-        <br />
-        <LinearProgress variant="determinate" value={state.progress1} color="success" />
+        <LinearProgress variant="determinate" value={state.progress1} color="success" sx={{ my: '10px' }} />
       </PlayTabPanel>
     </Box >
   );
