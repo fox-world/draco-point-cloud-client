@@ -19,14 +19,19 @@ function init(pcd) {
 
     scene = new THREE.Scene();
 
-    camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.01, 40);
-    camera.position.set(0, 0, 1);
+    camera = new THREE.PerspectiveCamera(12, window.innerWidth / window.innerHeight, 0.5, 50000);
+    camera.position.z = 310;
     scene.add(camera);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', render); // use if there is no animation loop
-    controls.minDistance = 0.05;
-    controls.maxDistance = 100;
+    controls.target = new THREE.Vector3(0, 0, 1);
+    controls.autoRotate = false;
+    controls.dampingFactor = 0.25;
+
+    // 控制缩放范围
+    //controls.minDistance = 0.1;
+    //controls.maxDistance = 100;
 
     //scene.add( new THREE.AxesHelper( 1 ) );
 
@@ -35,10 +40,15 @@ function init(pcd) {
         points.geometry.center();
         points.geometry.rotateX(Math.PI);
         points.name = '000001.pcd';
+
+        // 沿y轴方向平移一定单位
+        points.translateY(10);
+
+        // 图像缩放
+        points.scale.set(1.1, 1.1, 1.1);
         scene.add(points);
 
         render();
-
     });
     window.addEventListener('resize', onWindowResize);
 }
