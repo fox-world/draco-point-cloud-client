@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
 
+import parseUrl from 'parse-url';
+
 let camera, scene, renderer;
 let parent, width, height;
 
@@ -39,10 +41,10 @@ function loadPcd(pcd) {
     //scene.add( new THREE.AxesHelper( 1 ) );
 
     const loader = new PCDLoader();
-    loader.load(pcd, function (points) {
+    loader.load(pcd, points => {
         points.geometry.center();
         points.geometry.rotateX(Math.PI);
-        points.name = '000001.pcd';
+        points.name = parseUrl(pcd).pathname;
 
         // 沿y轴方向平移一定单位
         //points.translateY(10);
