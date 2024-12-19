@@ -10,7 +10,7 @@ import * as React from 'react';
 import PlayArea from './playArea';
 import PlayButton from './PlayButton';
 
-import { startDracoPlay } from './playFunc';
+import { startDracoPlay, loadPcdDataInfo } from './playFunc';
 import { playPcd } from './playPcd'
 
 function PlayTabPanel(props) {
@@ -29,6 +29,9 @@ function PlayTabPanel(props) {
     </div>
   );
 }
+
+let pcds = await loadPcdDataInfo('http://127.0.0.1:8000/pcds/listPcdFiles');
+console.log(pcds);
 
 PlayTabPanel.propTypes = {
   children: PropTypes.node,

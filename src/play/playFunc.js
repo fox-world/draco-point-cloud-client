@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const startPcdPlay = (props, callback, interval) => {
     let progress = props.progress0;
     interval['interval0'] = setInterval(() => {
@@ -23,3 +25,12 @@ export const startDracoPlay = (props, callback, interval) => {
         callback({ ...props, 'progress1': progress });
     }, 100);
 };
+
+export const loadPcdDataInfo = async (url) => {
+    try {
+        const { data: response } = await axios.get(url);
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}

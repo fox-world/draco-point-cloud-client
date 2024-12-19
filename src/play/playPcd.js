@@ -1,12 +1,9 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
 import axios from 'axios';
 
 import pcdProto from '../proto/pcd.proto';
 import protobuf from 'protobufjs';
-
-import parseUrl from 'parse-url';
 
 let camera, scene, renderer;
 let parent, width, height;
