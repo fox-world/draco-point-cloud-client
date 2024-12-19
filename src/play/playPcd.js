@@ -75,13 +75,12 @@ function loadPcd(data) {
 
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.center();
+    geometry.rotateX(Math.PI);
 
     // 沿y轴方向平移一定单位
     //points.translateY(10);
     points.translateX(70);
-
-    points.geometry.center();
-    points.geometry.rotateX(Math.PI);
     points.name = data.name;
 
     // 图像缩放
