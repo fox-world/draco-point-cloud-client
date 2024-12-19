@@ -78,6 +78,7 @@ function loadPcd(data) {
 
     // 沿y轴方向平移一定单位
     //points.translateY(10);
+    points.translateX(70);
 
     points.geometry.center();
     points.geometry.rotateX(Math.PI);
