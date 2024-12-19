@@ -1,19 +1,41 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
+import axios from 'axios';
+
+import pcdProto from '../proto/pcd.proto';
+import protobuf from 'protobufjs';
 
 import parseUrl from 'parse-url';
 
 let camera, scene, renderer;
 let parent, width, height;
 
-export const playPcd = (pId, pHeight) => {
+const loadProto = async () => {
+    const root = await protobuf.load(pcdProto);
+    return root.lookupType("PcdData");
+};
+
+const decodeProtobuf = async (buffer) => {
+    const MyMessage = await loadProto();
+    return MyMessage.decode(new Uint8Array(buffer));
+};
+
+export const playPcd = async (pId, pHeight) => {
     let pcd = 'http://127.0.0.1:8080/000001.pcd';
     height = pHeight;
     parent = document.getElementById(`${pId}`);
     width = parent.offsetWidth;
-    loadPcd(pcd);
-    render();
+    //loadPcd(pcd);
+    //render();
+    let url = 'http://127.0.0.1:8000/pcds/loadPcdBinary'
+    axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
+        decodeProtobuf(response.data).then(v => {
+            console.log(v.point.length)
+        })
+    }).catch(function (error) {
+        console.log(error);
+    });
 };
 
 function loadPcd(pcd) {
