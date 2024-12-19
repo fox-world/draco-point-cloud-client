@@ -11,34 +11,31 @@ import parseUrl from 'parse-url';
 let camera, scene, renderer;
 let parent, width, height;
 
-const loadProto = async () => {
+const loadProtobuf = async () => {
     const root = await protobuf.load(pcdProto);
     return root.lookupType("PcdData");
 };
 
 const decodeProtobuf = async (buffer) => {
-    const MyMessage = await loadProto();
+    const MyMessage = await loadProtobuf();
     return MyMessage.decode(new Uint8Array(buffer));
 };
 
-export const playPcd = async (pId, pHeight) => {
-    let pcd = 'http://127.0.0.1:8080/000001.pcd';
+export const playPcd = (pId, pHeight) => {
     height = pHeight;
     parent = document.getElementById(`${pId}`);
     width = parent.offsetWidth;
-    //loadPcd(pcd);
-    //render();
     let url = 'http://127.0.0.1:8000/pcds/loadPcdBinary'
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
-        decodeProtobuf(response.data).then(v => {
-            console.log(v.point.length)
+        decodeProtobuf(response.data).then(result => {
+            loadPcd(result);
         })
     }).catch(function (error) {
         console.log(error);
     });
 };
 
-function loadPcd(pcd) {
+function loadPcd(data) {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
@@ -62,21 +59,35 @@ function loadPcd(pcd) {
 
     //scene.add( new THREE.AxesHelper( 1 ) );
 
-    const loader = new PCDLoader();
-    loader.load(pcd, points => {
-        points.geometry.center();
-        points.geometry.rotateX(Math.PI);
-        points.name = parseUrl(pcd).pathname;
+    let geometry = new THREE.BufferGeometry();
+    let material = new THREE.PointsMaterial({ size: 0.05, vertexColors: 2 });  //vertexColors: THREE.VertexColors
+    let points = new THREE.Points(geometry, material);
 
-        // 沿y轴方向平移一定单位
-        //points.translateY(10);
+    let positions = Float32Array.from(data.point)
 
-        // 图像缩放
-        points.scale.set(1.2, 1.2, 1.2);
-        scene.add(points);
+    let color = []
+    for (let i = 0; i < data.point.length; i += 3) {
+        color[i] = 0.12;
+        color[i + 1] = 0.565;
+        color[i + 2] = 1;
+    }
+    let colors = new Float32Array(color)
 
-        render();
-    });
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+    // 沿y轴方向平移一定单位
+    //points.translateY(10);
+
+    points.geometry.center();
+    points.geometry.rotateX(Math.PI);
+    points.name = data.name;
+
+    // 图像缩放
+    points.scale.set(1.2, 1.2, 1.2);
+    scene.add(points);
+
+    render();
     window.addEventListener('resize', onWindowResize);
 }
 
