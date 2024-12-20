@@ -30,9 +30,9 @@ export const playPcd = (pId, pHeight, data, props, callback) => {
 
 let count = 0;
 export const loadPlayPcd = (data, props, callback) => {
-    count++;
     let file = data.file[count];
     let total = data.total;
+    count++;
     let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         decodeProtobuf(response.data).then(result => {
