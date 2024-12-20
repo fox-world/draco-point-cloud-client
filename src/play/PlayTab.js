@@ -10,8 +10,7 @@ import * as React from 'react';
 import PlayArea from './playArea';
 import PlayButton from './PlayButton';
 
-import { startDracoPlay, loadPcdDataInfo } from './playFunc';
-import { playPcd } from './playPcd'
+import { startPcdPlay, startDracoPlay, loadPcdDataInfo } from './playFunc';
 
 function PlayTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,7 +30,6 @@ function PlayTabPanel(props) {
 }
 
 let pcds = await loadPcdDataInfo('http://127.0.0.1:8000/pcds/listPcdFiles');
-console.log(pcds);
 
 PlayTabPanel.propTypes = {
   children: PropTypes.node,
@@ -80,8 +78,7 @@ export function PlayTabs() {
     if (tabIndex === 0) {
       state.disabled0 = 1;
       setShowContent(false);
-      playPcd(play_pcd_id, playAreaHeight)
-      //startPcdPlay(state, setState, interval);
+      startPcdPlay(play_pcd_id, playAreaHeight, pcds, state, setState, interval);
     }
     if (tabIndex === 1) {
       state.disabled1 = 1;

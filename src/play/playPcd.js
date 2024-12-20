@@ -18,11 +18,13 @@ const decodeProtobuf = async (buffer) => {
     return MyMessage.decode(new Uint8Array(buffer));
 };
 
-export const playPcd = (pId, pHeight) => {
+export const playPcd = (pId, url, pHeight) => {
     height = pHeight;
     parent = document.getElementById(`${pId}`);
+    //parent.innerHTML = '';
+    console.log(`------------${pId}-----------------`)
+    console.log(parent.innerHTML);
     width = parent.offsetWidth;
-    let url = 'http://127.0.0.1:8000/pcds/loadPcdBinary'
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         decodeProtobuf(response.data).then(result => {
             loadPcd(result);
@@ -77,7 +79,7 @@ function loadPcd(data) {
 
     // 沿y轴方向平移一定单位
     //points.translateY(10);
-    points.translateX(70);
+    //points.translateX(70);
     points.name = data.name;
 
     // 图像缩放
