@@ -115,7 +115,7 @@ export function PlayTabs() {
           <AlertTitle><b>pcd</b>播放</AlertTitle>
           <Typography gutterBottom>
             直接播放<b>pcd</b>点云文件，传输过程中数据包体积较大<br />
-            当前共有{pcds.total}个点云文件，当前处理到{state.processCount0}
+            当前共有<b>{pcds.total}</b>个点云文件，当前处理到第<b>{state.processCount0}</b>个
           </Typography>
           &nbsp;<PlayButton index={0} size="small" disabled={state.disabled0} onClick={startPlayClick} name='播放' />
           &nbsp;<PlayButton index={0} size="small" color="info" onClick={stopPlayClick} name='暂停' />
