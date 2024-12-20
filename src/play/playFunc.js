@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { playPcd } from './playPcd'
 
-export const startPcdPlay = (pId, height, data, props, callback, interval) => {
+export const startPcdPlay = (pId, height, data, props, callback) => {
     let total = data.total;
     let files = data.file;
-    let i = 0;
+    let count = 0;
     for (let file of files) {
+        let percent = (++count / total * 100).toFixed(2);
         let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
-        setTimeout(() => playPcd(pId, url, height), 5000 * (i++));
+        playPcd(pId, url, height);
+        callback({ ...props, 'progress0': percent });
     }
 };
 
