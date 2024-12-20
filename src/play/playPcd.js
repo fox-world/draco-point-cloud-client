@@ -18,6 +18,7 @@ const decodeProtobuf = async (buffer) => {
     return MyMessage.decode(new Uint8Array(buffer));
 };
 
+let count = 0;
 export const playPcd = (pId, pHeight, data, props, callback) => {
     // 进行一些必要的初始化操作
     if (count == 0) {
@@ -28,7 +29,7 @@ export const playPcd = (pId, pHeight, data, props, callback) => {
     loadPlayPcd(data, props, callback);
 };
 
-let count = 0;
+
 export const loadPlayPcd = (data, props, callback) => {
     let file = data.file[count];
     let total = data.total;
