@@ -4,7 +4,6 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import pcdProto from '../proto/pcd.proto';
 
-
 let camera, scene, renderer;
 let parent, width, height;
 
