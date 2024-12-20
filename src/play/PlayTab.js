@@ -78,9 +78,7 @@ export function PlayTabs() {
 
   const startPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
-      state.disabled0 = 1;
       setShowContent(false);
-      //startPcdPlay(play_pcd_id, playAreaHeight, pcds, state, setState);
       playPcd(play_pcd_id, playAreaHeight, pcds, state, setState);
     }
     if (tabIndex === 1) {
