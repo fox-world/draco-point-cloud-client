@@ -18,15 +18,31 @@ const decodeProtobuf = async (buffer) => {
     return MyMessage.decode(new Uint8Array(buffer));
 };
 
-export const playPcd = (pId, url, pHeight, props, callback) => {
-    height = pHeight;
-    parent = document.getElementById(`${pId}`);
-    width = parent.offsetWidth;
+let count = 0;
+export const playPcd = (pId, pHeight, data, props, callback) => {
+    if (count == 0) {
+        height = pHeight;
+        parent = document.getElementById(`${pId}`);
+        width = parent.offsetWidth;
+    }
+    let file = data.file[count];
+    let total = data.total;
+    count++;
+    let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         decodeProtobuf(response.data).then(result => {
             initComponments();
             renderPcd(result);
-            callback(props);
+            if (count < total) {
+                let percent = (count / total * 100).toFixed(2);
+                props = { ...props, 'progress0': percent, processCount0: count, disabled0: true };
+                callback(props);
+                playPcd(pId, pHeight, data, props, callback)
+            } else {
+                props = { ...props, 'progress0': 100, processCount0: count, disabled0: false };
+                callback(props);
+                count = 0;
+            }
         })
     }).catch(function (error) {
         console.log(error);

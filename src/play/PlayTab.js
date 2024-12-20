@@ -11,6 +11,7 @@ import PlayArea from './playArea';
 import PlayButton from './PlayButton';
 
 import { startPcdPlay, startDracoPlay, loadPcdDataInfo } from './playFunc';
+import { playPcd } from './playPcd'
 
 function PlayTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -79,7 +80,8 @@ export function PlayTabs() {
     if (tabIndex === 0) {
       state.disabled0 = 1;
       setShowContent(false);
-      startPcdPlay(play_pcd_id, playAreaHeight, pcds, state, setState);
+      //startPcdPlay(play_pcd_id, playAreaHeight, pcds, state, setState);
+      playPcd(play_pcd_id, playAreaHeight, pcds, state, setState);
     }
     if (tabIndex === 1) {
       state.disabled1 = 1;
