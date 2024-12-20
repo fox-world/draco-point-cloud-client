@@ -3,11 +3,11 @@ import { playPcd } from './playPcd'
 
 export const startPcdPlay = (pId, height, data, props, callback, interval) => {
     let total = data.total;
-    let files = data.file.slice(0, 2);
+    let files = data.file;
+    let i = 0;
     for (let file of files) {
         let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
-        //console.log(`加载文件${url}`);
-        playPcd(pId, url, height);
+        setTimeout(() => playPcd(pId, url, height), 5000 * (i++));
     }
 };
 

@@ -1,9 +1,9 @@
+import axios from 'axios';
+import protobuf from 'protobufjs';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import axios from 'axios';
-
 import pcdProto from '../proto/pcd.proto';
-import protobuf from 'protobufjs';
+
 
 let camera, scene, renderer;
 let parent, width, height;
@@ -22,19 +22,22 @@ export const playPcd = (pId, url, pHeight) => {
     height = pHeight;
     parent = document.getElementById(`${pId}`);
     //parent.innerHTML = '';
-    console.log(`------------${pId}-----------------`)
-    console.log(parent.innerHTML);
+    //console.log(parent.children.length);
     width = parent.offsetWidth;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         decodeProtobuf(response.data).then(result => {
-            loadPcd(result);
+            initComponments();
+            renderPcd(result);
         })
     }).catch(function (error) {
         console.log(error);
     });
 };
 
-function loadPcd(data) {
+function initComponments() {
+    while (parent.hasChildNodes()) {
+        parent.removeChild(parent.lastChild);
+    }
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
@@ -58,10 +61,14 @@ function loadPcd(data) {
 
     //scene.add( new THREE.AxesHelper( 1 ) );
 
+    window.addEventListener('resize', onWindowResize);
+    return scene;
+}
+
+function renderPcd(data) {
     let geometry = new THREE.BufferGeometry();
     let material = new THREE.PointsMaterial({ size: 0.05, vertexColors: 2 });  //vertexColors: THREE.VertexColors
     let points = new THREE.Points(geometry, material);
-
     let positions = Float32Array.from(data.point)
 
     let color = []
@@ -85,9 +92,7 @@ function loadPcd(data) {
     // 图像缩放
     points.scale.set(1.2, 1.2, 1.2);
     scene.add(points);
-
     render();
-    window.addEventListener('resize', onWindowResize);
 }
 
 function onWindowResize() {
