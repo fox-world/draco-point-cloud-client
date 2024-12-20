@@ -91,8 +91,11 @@ function initComponments() {
 
 function renderPcd(data) {
     // 移除旧点云数据
-    if (scene.children.length) {
-        scene.remove(scene.children[1]);
+    for (let child of scene.children) {
+        if (child.type === 'Points') {
+            scene.remove(child);
+            break;
+        }
     }
 
     let geometry = new THREE.BufferGeometry();
