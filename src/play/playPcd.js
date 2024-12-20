@@ -18,17 +18,16 @@ const decodeProtobuf = async (buffer) => {
     return MyMessage.decode(new Uint8Array(buffer));
 };
 
-export const playPcd = (pId, url, pHeight) => {
+export const playPcd = (pId, url, pHeight, percent, props, callback) => {
     height = pHeight;
     parent = document.getElementById(`${pId}`);
-    //parent.innerHTML = '';
-    //console.log(parent.children.length);
     width = parent.offsetWidth;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         decodeProtobuf(response.data).then(result => {
             initComponments();
             renderPcd(result);
         })
+        callback({ ...props, 'progress0': percent });
     }).catch(function (error) {
         console.log(error);
     });
@@ -62,7 +61,6 @@ function initComponments() {
     //scene.add( new THREE.AxesHelper( 1 ) );
 
     window.addEventListener('resize', onWindowResize);
-    return scene;
 }
 
 function renderPcd(data) {

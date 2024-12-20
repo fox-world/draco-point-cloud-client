@@ -8,8 +8,7 @@ export const startPcdPlay = (pId, height, data, props, callback) => {
     for (let file of files) {
         let percent = (++count / total * 100).toFixed(2);
         let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
-        playPcd(pId, url, height);
-        callback({ ...props, 'progress0': percent });
+        playPcd(pId, url, height, percent, props, callback);
     }
 };
 
