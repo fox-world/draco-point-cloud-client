@@ -41,11 +41,11 @@ export const loadPlayPcd = (data, props, callback) => {
             renderPcd(result);
             if (count < total) {
                 let percent = (count / total * 100).toFixed(2);
-                props = { ...props, 'progress0': percent, processCount0: count, disabled0: true };
+                props = { ...props, 'progress0': percent, processCount0: count, disabled0: 1 };
                 callback(props);
                 loadPlayPcd(data, props, callback)
             } else {
-                props = { ...props, 'progress0': 100, processCount0: count, disabled0: false };
+                props = { ...props, 'progress0': 100, processCount0: count, disabled0: 0 };
                 callback(props);
                 count = 0;
             }
