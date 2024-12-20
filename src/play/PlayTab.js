@@ -90,7 +90,6 @@ export function PlayTabs() {
   const stopPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
       setState({ ...state, 'disabled0': 0 });
-      clearInterval(interval['interval0']);
     }
     if (tabIndex === 1) {
       setState({ ...state, 'disabled1': 0 });

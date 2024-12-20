@@ -26,8 +26,8 @@ export const playPcd = (pId, url, pHeight, props, callback) => {
         decodeProtobuf(response.data).then(result => {
             initComponments();
             renderPcd(result);
+            callback(props);
         })
-        callback(props);
     }).catch(function (error) {
         console.log(error);
     });
