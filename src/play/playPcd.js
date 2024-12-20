@@ -51,7 +51,6 @@ export const loadPlayPcd = (data, props, callback) => {
                 props = { ...props, 'progress0': percent, processCount0: count, disabled0: 1 };
                 callback(props);
                 loadPlayPcd(data, props, callback)
-                console.log('=====开始处理======' + new Date());
             } else {
                 props = { ...props, 'progress0': 100, processCount0: count, disabled0: 0 };
                 callback(props);
@@ -90,11 +89,10 @@ function initComponments() {
     window.addEventListener('resize', onWindowResize);
 }
 
-let oldPoints;
 function renderPcd(data) {
-    // 移除旧数据
-    if (!!oldPoints) {
-        scene.remove(oldPoints);
+    // 移除旧点云数据
+    if (scene.children.length) {
+        scene.remove(scene.children[1]);
     }
 
     let geometry = new THREE.BufferGeometry();
@@ -122,7 +120,6 @@ function renderPcd(data) {
 
     // 图像缩放
     points.scale.set(1.2, 1.2, 1.2);
-    oldPoints = points;
     scene.add(points);
     render();
 }
