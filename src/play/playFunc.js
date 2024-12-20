@@ -1,5 +1,4 @@
-import axios from 'axios';
-
+// 模拟功能
 export const startDracoPlay = (props, callback, interval) => {
     let progress = props.progress1;
     interval['interval1'] = setInterval(() => {
