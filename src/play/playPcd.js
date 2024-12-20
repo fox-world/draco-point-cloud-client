@@ -26,6 +26,14 @@ export const playPcd = (pId, pHeight, data, props, callback) => {
     props = { ...props, 'progress0': 0, disabled0: 1 };
     callback(props);
 
+    let total = data.total;
+    if (total === 0) {
+        return;
+    }
+
+    if (!scene) {
+        initComponments();
+    }
     loadPlayPcd(data, props, callback);
 };
 
@@ -37,13 +45,13 @@ export const loadPlayPcd = (data, props, callback) => {
     let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         decodeProtobuf(response.data).then(result => {
-            initComponments();
             renderPcd(result);
             if (count < total) {
                 let percent = (count / total * 100).toFixed(2);
                 props = { ...props, 'progress0': percent, processCount0: count, disabled0: 1 };
                 callback(props);
                 loadPlayPcd(data, props, callback)
+                console.log('=====开始处理======' + new Date());
             } else {
                 props = { ...props, 'progress0': 100, processCount0: count, disabled0: 0 };
                 callback(props);
@@ -56,9 +64,6 @@ export const loadPlayPcd = (data, props, callback) => {
 };
 
 function initComponments() {
-    while (parent.hasChildNodes()) {
-        parent.removeChild(parent.lastChild);
-    }
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height);
@@ -85,7 +90,13 @@ function initComponments() {
     window.addEventListener('resize', onWindowResize);
 }
 
+let oldPoints;
 function renderPcd(data) {
+    // 移除旧数据
+    if (!!oldPoints) {
+        scene.remove(oldPoints);
+    }
+
     let geometry = new THREE.BufferGeometry();
     let material = new THREE.PointsMaterial({ size: 0.05, vertexColors: 2 });  //vertexColors: THREE.VertexColors
     let points = new THREE.Points(geometry, material);
@@ -111,6 +122,7 @@ function renderPcd(data) {
 
     // 图像缩放
     points.scale.set(1.2, 1.2, 1.2);
+    oldPoints = points;
     scene.add(points);
     render();
 }
