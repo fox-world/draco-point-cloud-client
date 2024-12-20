@@ -18,7 +18,7 @@ const decodeProtobuf = async (buffer) => {
     return MyMessage.decode(new Uint8Array(buffer));
 };
 
-export const playPcd = (pId, url, pHeight, percent, props, callback) => {
+export const playPcd = (pId, url, pHeight, props, callback) => {
     height = pHeight;
     parent = document.getElementById(`${pId}`);
     width = parent.offsetWidth;
@@ -27,7 +27,7 @@ export const playPcd = (pId, url, pHeight, percent, props, callback) => {
             initComponments();
             renderPcd(result);
         })
-        callback({ ...props, 'progress0': percent });
+        callback(props);
     }).catch(function (error) {
         console.log(error);
     });
