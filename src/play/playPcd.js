@@ -1,21 +1,11 @@
 import axios from 'axios';
-import protobuf from 'protobufjs';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import pcdProto from '../proto/pcd.proto';
+import { PcdData } from '../proto/pcd_pb.js';
 
 let camera, scene, renderer;
 let parent, width, height;
 
-const loadProtobuf = async () => {
-    const root = await protobuf.load(pcdProto);
-    return root.lookupType("PcdData");
-};
-
-const decodeProtobuf = async (buffer) => {
-    const MyMessage = await loadProtobuf();
-    return MyMessage.decode(new Uint8Array(buffer));
-};
 
 export const playPcd = (pId, pHeight, data, props, callback) => {
     // 进行一些必要的初始化操作
@@ -44,19 +34,18 @@ export const loadPlayPcd = (data, props, callback) => {
     count++;
     let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
-        decodeProtobuf(response.data).then(result => {
-            renderPcd(result);
-            if (count < total) {
-                let percent = (count / total * 100).toFixed(2);
-                props = { ...props, 'progress0': percent, processCount0: count, disabled0: 1 };
-                callback(props);
-                loadPlayPcd(data, props, callback)
-            } else {
-                props = { ...props, 'progress0': 100, processCount0: count, disabled0: 0 };
-                callback(props);
-                count = 0;
-            }
-        })
+        let result = PcdData.deserializeBinary(response.data);
+        renderPcd(result);
+        if (count < total) {
+            let percent = (count / total * 100).toFixed(2);
+            props = { ...props, 'progress0': percent, processCount0: count, disabled0: 1 };
+            callback(props);
+            loadPlayPcd(data, props, callback)
+        } else {
+            props = { ...props, 'progress0': 100, processCount0: count, disabled0: 0 };
+            callback(props);
+            count = 0;
+        }
     }).catch(function (error) {
         console.log(error);
     });
@@ -101,10 +90,10 @@ function renderPcd(data) {
     let geometry = new THREE.BufferGeometry();
     let material = new THREE.PointsMaterial({ size: 0.05, vertexColors: 2 });  //vertexColors: THREE.VertexColors
     let points = new THREE.Points(geometry, material);
-    let positions = Float32Array.from(data.point)
+    let positions = Float32Array.from(data.getPointList())
 
     let color = []
-    for (let i = 0; i < data.point.length; i += 3) {
+    for (let i = 0; i < data.getPointList().length; i += 3) {
         color[i] = 0.12;
         color[i + 1] = 0.565;
         color[i + 2] = 1;
@@ -119,7 +108,7 @@ function renderPcd(data) {
     // 沿y轴方向平移一定单位
     //points.translateY(10);
     //points.translateX(70);
-    points.name = data.name;
+    points.name = data.getName();
 
     // 图像缩放
     points.scale.set(1.2, 1.2, 1.2);

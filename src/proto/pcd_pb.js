@@ -13,7 +13,13 @@
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global =
+    (typeof globalThis !== 'undefined' && globalThis) ||
+    (typeof window !== 'undefined' && window) ||
+    (typeof global !== 'undefined' && global) ||
+    (typeof self !== 'undefined' && self) ||
+    (function () { return this; }).call(null) ||
+    Function('return this')();
 
 goog.exportSymbol('proto.PcdData', null, global);
 /**
@@ -27,7 +33,7 @@ goog.exportSymbol('proto.PcdData', null, global);
  * @constructor
  */
 proto.PcdData = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.PcdData.repeatedFields_, null);
 };
 goog.inherits(proto.PcdData, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -37,6 +43,13 @@ if (goog.DEBUG && !COMPILED) {
    */
   proto.PcdData.displayName = 'proto.PcdData';
 }
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.PcdData.repeatedFields_ = [3];
 
 
 
@@ -69,9 +82,9 @@ proto.PcdData.prototype.toObject = function(opt_includeInstance) {
  */
 proto.PcdData.toObject = function(includeInstance, msg) {
   var f, obj = {
-    idx: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    point: jspb.Message.getFloatingPointFieldWithDefault(msg, 3, 0.0)
+idx: (f = jspb.Message.getField(msg, 1)) == null ? undefined : f,
+name: jspb.Message.getFieldWithDefault(msg, 2, ""),
+pointList: (f = jspb.Message.getRepeatedFloatingPointField(msg, 3)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -117,8 +130,10 @@ proto.PcdData.deserializeBinaryFromReader = function(msg, reader) {
       msg.setName(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readFloat());
-      msg.setPoint(value);
+      var values = /** @type {!Array<number>} */ (reader.isDelimited() ? reader.readPackedFloat() : [reader.readFloat()]);
+      for (var i = 0; i < values.length; i++) {
+        msg.addPoint(values[i]);
+      }
       break;
     default:
       reader.skipField();
@@ -163,9 +178,9 @@ proto.PcdData.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getPoint();
-  if (f !== 0.0) {
-    writer.writeFloat(
+  f = message.getPointList();
+  if (f.length > 0) {
+    writer.writePackedFloat(
       3,
       f
     );
@@ -228,20 +243,39 @@ proto.PcdData.prototype.setName = function(value) {
 
 
 /**
- * optional float point = 3;
- * @return {number}
+ * repeated float point = 3;
+ * @return {!Array<number>}
  */
-proto.PcdData.prototype.getPoint = function() {
-  return /** @type {number} */ (jspb.Message.getFloatingPointFieldWithDefault(this, 3, 0.0));
+proto.PcdData.prototype.getPointList = function() {
+  return /** @type {!Array<number>} */ (jspb.Message.getRepeatedFloatingPointField(this, 3));
+};
+
+
+/**
+ * @param {!Array<number>} value
+ * @return {!proto.PcdData} returns this
+ */
+proto.PcdData.prototype.setPointList = function(value) {
+  return jspb.Message.setField(this, 3, value || []);
 };
 
 
 /**
  * @param {number} value
+ * @param {number=} opt_index
  * @return {!proto.PcdData} returns this
  */
-proto.PcdData.prototype.setPoint = function(value) {
-  return jspb.Message.setProto3FloatField(this, 3, value);
+proto.PcdData.prototype.addPoint = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 3, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.PcdData} returns this
+ */
+proto.PcdData.prototype.clearPointList = function() {
+  return this.setPointList([]);
 };
 
 
