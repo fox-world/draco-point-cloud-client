@@ -13,7 +13,7 @@ export const playPcd = (pId, pHeight, data, props, callback) => {
     parent = document.getElementById(`${pId}`);
     width = parent.offsetWidth;
 
-    props = { ...props, 'progress0': 0, disabled0: 1 };
+    props = { ...props, 'progress': 0, playing: true };
     callback(props);
 
     let total = data.total;
@@ -38,11 +38,11 @@ export const loadPlayPcd = (data, props, callback) => {
         renderPcd(result);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
-            props = { ...props, 'progress0': percent, processCount0: count, disabled0: 1 };
+            props = { ...props, 'progress': percent, processCount: count, playing: true };
             callback(props);
             loadPlayPcd(data, props, callback)
         } else {
-            props = { ...props, 'progress0': 100, processCount0: count, disabled0: 0 };
+            props = { ...props, 'progress': 100, processCount: count, playing: false };
             callback(props);
             count = 0;
         }
