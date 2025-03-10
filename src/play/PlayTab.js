@@ -98,7 +98,6 @@ export function PlayTabs() {
   const stopPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
       setPlaying0(false);
-      setState0({ 'progress': 0, processCount: 0 });
     }
     if (tabIndex === 1) {
       setState1({ ...state1, 'disabled': 0 });

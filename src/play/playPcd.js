@@ -13,8 +13,6 @@ export const playPcd = (pId, pHeight, data, playingRef, updateState) => {
     parent = document.getElementById(`${pId}`);
     width = parent.offsetWidth;
 
-    updateState({ 'progress': 0, processCount: 0 });
-
     let total = data.total;
     if (total === 0) {
         return;
