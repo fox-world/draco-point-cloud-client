@@ -7,14 +7,13 @@ let camera, scene, renderer;
 let parent, width, height;
 
 
-export const playPcd = (pId, pHeight, data, props, callback) => {
+export const playPcd = (pId, pHeight, data, playingRef, updateState) => {
     // 进行一些必要的初始化操作
     height = pHeight;
     parent = document.getElementById(`${pId}`);
     width = parent.offsetWidth;
 
-    props = { ...props, 'progress': 0, playing: true };
-    callback(props);
+    updateState({ 'progress': 0, processCount: 0 });
 
     let total = data.total;
     if (total === 0) {
@@ -24,26 +23,27 @@ export const playPcd = (pId, pHeight, data, props, callback) => {
     if (!scene) {
         initComponments();
     }
-    loadPlayPcd(data, props, callback);
+    loadPlayPcd(data, playingRef, updateState);
 };
 
 let count = 0;
-export const loadPlayPcd = (data, props, callback) => {
+export const loadPlayPcd = (data, playingRef, updateState) => {
     let file = data.file[count];
     let total = data.total;
     count++;
     let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
+        if (!playingRef.current) {
+            return;
+        }
         let result = PcdData.deserializeBinary(response.data);
         renderPcd(result);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
-            props = { ...props, 'progress': percent, processCount: count, playing: true };
-            callback(props);
-            loadPlayPcd(data, props, callback)
+            updateState({ 'progress': percent, processCount: count });
+            loadPlayPcd(data, playingRef, updateState)
         } else {
-            props = { ...props, 'progress': 100, processCount: count, playing: false };
-            callback(props);
+            updateState({ 'progress': 0, processCount: 0 });
             count = 0;
         }
     }).catch(function (error) {

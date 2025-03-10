@@ -60,10 +60,12 @@ export function PlayTabs() {
   const [showContent, setShowContent] = React.useState(true);
 
   const [state0, setState0] = React.useState({
-    playing: false,
     progress: 0,
     processCount: 0
   });
+
+  const [playing0, setPlaying0] = React.useState(false);
+  const playing0Ref = React.useRef(playing0);
 
   const [state1, setState1] = React.useState({
     progress: 0,
@@ -84,7 +86,8 @@ export function PlayTabs() {
   const startPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
       setShowContent(false);
-      playPcd(play_pcd_id, playAreaHeight, pcds, state0, setState0);
+      setPlaying0(true);
+      playPcd(play_pcd_id, playAreaHeight, pcds, playing0Ref, setState0);
     }
     if (tabIndex === 1) {
       state1.disabled = 1;
@@ -94,13 +97,18 @@ export function PlayTabs() {
 
   const stopPlayClick = (tabIndex) => {
     if (tabIndex === 0) {
-      setState0({ ...state0, 'playing': false });
+      setPlaying0(false);
+      setState0({ 'progress': 0, processCount: 0 });
     }
     if (tabIndex === 1) {
       setState1({ ...state1, 'disabled': 0 });
       clearInterval(interval['interval1']);
     }
   };
+
+  React.useEffect(() => {
+    playing0Ref.current = playing0;
+  }, [playing0]);
 
   React.useEffect(() => {
     document.title = "点云播放测试";
@@ -122,8 +130,8 @@ export function PlayTabs() {
             直接播放<b>pcd</b>点云文件，传输过程中数据包体积较大<br />
             当前共有<b>{pcds.total}</b>个点云文件，当前处理到第<b>{state0.processCount}</b>个
           </Typography>
-          &nbsp;<PlayButton index={0} size="small" playing={state0.playing} onClick={startPlayClick} name='播放' />
-          &nbsp;<PlayButton index={0} size="small" playing={!state0.playing} color="info" onClick={stopPlayClick} name='暂停' />
+          &nbsp;<PlayButton index={0} size="small" playing={playing0} onClick={startPlayClick} name='播放' />
+          &nbsp;<PlayButton index={0} size="small" playing={!playing0} color="info" onClick={stopPlayClick} name='暂停' />
         </Alert>
         <LinearProgress variant="determinate" value={state0.progress} color="success" sx={{ my: '10px' }} />
         <PlayArea id={play_pcd_id} content="直接播放Pcd" minHeight={playAreaHeight} showContent={showContent} />
