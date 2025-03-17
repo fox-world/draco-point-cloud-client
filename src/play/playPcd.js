@@ -29,7 +29,7 @@ export const loadPlayPcd = (data, playingRef, updateState) => {
     let file = data.file[count];
     let total = data.total;
     count++;
-    let url = `http://127.0.0.1:8000/pcds/loadPcdBinary?pcd=${file}`;
+    let url = `http://127.0.0.1:8000/main/loadPcdBinary?pcd=${file}`;
     axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
         if (!playingRef.current) {
             return;

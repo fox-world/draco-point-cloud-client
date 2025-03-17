@@ -30,7 +30,7 @@ function PlayTabPanel(props) {
   );
 }
 
-let pcds = await loadPcdDataInfo('http://127.0.0.1:8000/pcds/listPcdFiles');
+let pcds = await loadPcdDataInfo('http://127.0.0.1:8000/main/listPcdFiles');
 
 PlayTabPanel.propTypes = {
   children: PropTypes.node,
