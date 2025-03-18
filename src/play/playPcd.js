@@ -27,7 +27,7 @@ export const loadPlayPcd = (data, playingRef, updateState, renderer, camera, sce
             return;
         }
         let result = PcdData.deserializeBinary(response.data);
-        renderPcd(result.getPointList(), renderer, camera, scene);
+        renderPcd(result.getName(), result.getPointList(), renderer, camera, scene);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
             updateState({ 'progress': percent, processCount: count });

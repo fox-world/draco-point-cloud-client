@@ -94,7 +94,7 @@ export const initComponments = (width, height, parent) => {
     return [renderer, camera, scene];
 }
 
-export const renderPcd = (data, renderer, camera, scene) => {
+export const renderPcd = (name, data, renderer, camera, scene) => {
     // 移除旧点云数据
     for (let child of scene.children) {
         if (child.type === 'Points') {
@@ -124,7 +124,7 @@ export const renderPcd = (data, renderer, camera, scene) => {
     // 沿y轴方向平移一定单位
     //points.translateY(10);
     //points.translateX(70);
-    points.name = 'test.drc';
+    points.name = name;
 
     // 图像缩放
     points.scale.set(1.2, 1.2, 1.2);

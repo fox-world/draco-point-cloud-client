@@ -33,7 +33,7 @@ export const loadPlayDrc = (data, playingRef, updateState, renderer, camera, sce
         }
         let result = PointData.deserializeBinary(response.data);
         let points = decodeDracoData(decoderModule, result.getPoints());
-        renderPcd(points, renderer, camera, scene);
+        renderPcd(result.getName(), points, renderer, camera, scene);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
             updateState({ 'progress': percent, processCount: count });
