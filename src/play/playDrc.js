@@ -1,10 +1,7 @@
 import axios from 'axios';
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PointData } from '../proto/point_pb.js';
-import draco3d from 'draco3d';
+import * as draco3d from 'draco3d';
 
-let camera, scene, renderer;
 let parent, width, height;
 let decoderModule = null;
 
@@ -18,7 +15,10 @@ export const playDrc = (pId, pHeight, data, playingRef, updateState) => {
     if (total === 0) {
         return;
     }
-    draco3d.createDecoderModule({}).then(function(module) {
+    let decoderConfig = {
+        wasmUrl: './static/draco_decoder.wasm'
+    };
+    draco3d.createDecoderModule({}).then(module => {
         decoderModule = module;
         console.log('Decoder Module Initialized!');
         loadPlayDrc(data, playingRef, updateState);
@@ -36,7 +36,7 @@ export const loadPlayDrc = (data, playingRef, updateState) => {
             return;
         }
         let result = PointData.deserializeBinary(response.data);
-        console.log(result.getIdx()+'\t'+result.getName()+'\t'+result.getPoints().length);
+        console.log(result.getIdx() + '\t' + result.getName() + '\t' + result.getPoints().length);
         //renderPcd(result);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
