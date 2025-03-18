@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let baseURL = process.env.REACT_APP_BASE_URL || process.env.REACT_APP_DEFAULT_BASE_URL;
+let baseURL = process.env.REACT_APP_BASE_URL;
 console.log(`base url:\t` + baseURL);
 export const request = axios.create({
     //根据运行环境来选择相应接口地址
