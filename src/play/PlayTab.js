@@ -10,9 +10,9 @@ import * as React from 'react';
 import PlayArea from './playArea';
 import PlayButton from './PlayButton';
 
-import { loadDataInfo } from './playFunc';
-import { playPcd } from './playPcd'
-import { playDrc } from './playDrc'
+import { playPcd } from './playPcd';
+import { playDrc } from './playDrc';
+import { loadDataInfo } from '../tools/request_tools';
 
 function PlayTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -31,8 +31,8 @@ function PlayTabPanel(props) {
   );
 }
 
-let pcds = await loadDataInfo('http://127.0.0.1:8000/main/listPcdFiles');
-let drcs = await loadDataInfo('http://127.0.0.1:8000/main/listDrcFiles');
+let pcds = await loadDataInfo('main/listPcdFiles');
+let drcs = await loadDataInfo('main/listDrcFiles');
 
 PlayTabPanel.propTypes = {
   children: PropTypes.node,

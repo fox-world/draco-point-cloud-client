@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { PcdData } from '../proto/pcd_pb.js';
-import { initComponments, renderPcd } from './playFunc';
+import { PcdData } from '../proto/pcd_pb';
+import { request} from '../tools/axios_tools';
+import { initComponments, renderPcd } from '../tools/play_tools';
 
 export const playPcd = (pId, pHeight, data, playingRef, updateState) => {
     // 进行一些必要的初始化操作
@@ -21,8 +21,8 @@ export const loadPlayPcd = (data, playingRef, updateState, renderer, camera, sce
     let file = data.file[count];
     let total = data.total;
     count++;
-    let url = `http://127.0.0.1:8000/main/loadPcdBinary?pcd=${file}`;
-    axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
+    let url = `main/loadPcdBinary?pcd=${file}`;
+    request.get(url, { responseType: "arraybuffer" }).then(function (response) {
         if (!playingRef.current) {
             return;
         }

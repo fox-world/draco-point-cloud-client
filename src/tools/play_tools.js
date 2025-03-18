@@ -1,16 +1,5 @@
-import axios from 'axios';
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-export const loadDataInfo = async (url) => {
-    try {
-        const { data: response } = await axios.get(url);
-        return response;
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 export const decodeDracoData = (decoderModule, rawBuffer) => {
     let points = [];

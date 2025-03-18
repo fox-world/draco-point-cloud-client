@@ -1,7 +1,7 @@
-import axios from 'axios';
-import { PointData } from '../proto/point_pb.js';
 import * as draco3d from 'draco3d';
-import { decodeDracoData, initComponments, renderPcd } from './playFunc';
+import { PointData } from '../proto/point_pb';
+import { request} from '../tools/axios_tools';
+import { decodeDracoData, initComponments, renderPcd } from '../tools/play_tools';
 
 let decoderModule = null;
 export const playDrc = (pId, pHeight, data, playingRef, updateState) => {
@@ -26,8 +26,8 @@ export const loadPlayDrc = (data, playingRef, updateState, renderer, camera, sce
     let file = data.file[count];
     let total = data.total;
     count++;
-    let url = `http://127.0.0.1:8000/main/loadDrcBinary?drc=${file}`;
-    axios.get(url, { responseType: "arraybuffer" }).then(function (response) {
+    let url = `main/loadDrcBinary?drc=${file}`;
+    request.get(url, { responseType: "arraybuffer" }).then(function (response) {
         if (!playingRef.current) {
             return;
         }
