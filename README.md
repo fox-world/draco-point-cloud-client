@@ -16,3 +16,12 @@ http-server --cors  -o 000010.pcd
 #生成protobuf pb文件 protoc-3.17.0-win64
 protoc --proto_path=./ --js_out=import_style=commonjs,binary:. ./*.proto
 ```
+
+# Dynamic change base url
+```bash
+# Windows
+set "REACT_APP_BASE_URL=http://127.0.0.1:8000" && npm start
+
+# Linux
+REACT_APP_BASE_URL='http://127.0.0.1:8000' && npm start
+```
