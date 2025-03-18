@@ -1,5 +1,7 @@
 import axios from 'axios';
+
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 export const loadDataInfo = async (url) => {
     try {
@@ -57,6 +59,39 @@ export const decodeDracoData = (decoderModule, rawBuffer) => {
     decoderModule.destroy(decoder);
     decoderModule.destroy(dracoGeometry);
     return points;
+}
+
+export const initComponments = (width, height, parent) => {
+    let renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(width, height);
+    parent.appendChild(renderer.domElement);
+
+    let scene = new THREE.Scene();
+
+    let camera = new THREE.PerspectiveCamera(12, width / height, 0.5, 50000);
+    camera.position.z = 310;
+    scene.add(camera);
+
+    let controls = new OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', () => renderer.render(scene, camera)); // use if there is no animation loop
+    controls.target = new THREE.Vector3(0, 0, 1);
+    controls.autoRotate = false;
+    controls.dampingFactor = 0.25;
+
+    // 控制缩放范围
+    //controls.minDistance = 0.1;
+    //controls.maxDistance = 100;
+
+    //scene.add( new THREE.AxesHelper( 1 ) );
+
+    window.addEventListener('resize', () => {
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+        renderer.render(scene, camera);
+    });
+    return [renderer, camera, scene];
 }
 
 export const renderPcd = (data, renderer, camera, scene) => {
