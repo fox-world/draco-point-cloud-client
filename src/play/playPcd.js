@@ -3,6 +3,12 @@ import { request } from '../tools/axios_tools';
 import { initComponments, renderPcd } from '../tools/play_tools';
 
 let renderer, camera, scene;
+export const clearPcdData = () => {
+    renderer = null;
+    camera = null;
+    scene = null;
+}
+
 export const playPcd = (pId, pHeight, data, playingRef, updateState) => {
     // 进行一些必要的初始化操作
     let parent = document.getElementById(`${pId}`);

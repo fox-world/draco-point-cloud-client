@@ -10,8 +10,8 @@ import * as React from 'react';
 import PlayArea from './playArea';
 import PlayButton from './PlayButton';
 
-import { playPcd } from './playPcd';
-import { playDrc } from './playDrc';
+import { playPcd, clearPcdData } from './playPcd';
+import { playDrc, clearDrcData } from './playDrc';
 import { loadDataInfo } from '../tools/request_tools';
 
 function PlayTabPanel(props) {
@@ -74,9 +74,11 @@ export function PlayTabs() {
     setTabValue(newValue);
     if (newValue === 0) {
       stopPlayClick(1);
+      clearDrcData();
     }
     if (newValue === 1) {
       stopPlayClick(0);
+      clearPcdData();
     }
   };
 
@@ -112,7 +114,7 @@ export function PlayTabs() {
 
   React.useEffect(() => {
     if (state1.processCount == 0) {
-       setPlaying1(false);
+      setPlaying1(false);
     }
   }, [state1.processCount]);
 
