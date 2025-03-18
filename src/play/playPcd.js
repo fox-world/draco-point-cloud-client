@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PcdData } from '../proto/pcd_pb.js';
+import { renderPcd } from './playFunc';
 
 let camera, scene, renderer;
 let parent, width, height;
@@ -35,7 +36,7 @@ export const loadPlayPcd = (data, playingRef, updateState) => {
             return;
         }
         let result = PcdData.deserializeBinary(response.data);
-        renderPcd(result);
+        renderPcd(result.getPointList(), renderer, camera, scene);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
             updateState({ 'progress': percent, processCount: count });
@@ -62,7 +63,7 @@ function initComponments() {
     scene.add(camera);
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.addEventListener('change', render); // use if there is no animation loop
+    controls.addEventListener('change', () => renderer.render(scene, camera)); // use if there is no animation loop
     controls.target = new THREE.Vector3(0, 0, 1);
     controls.autoRotate = false;
     controls.dampingFactor = 0.25;
@@ -73,54 +74,10 @@ function initComponments() {
 
     //scene.add( new THREE.AxesHelper( 1 ) );
 
-    window.addEventListener('resize', onWindowResize);
-}
-
-function renderPcd(data) {
-    // 移除旧点云数据
-    for (let child of scene.children) {
-        if (child.type === 'Points') {
-            scene.remove(child);
-            break;
-        }
-    }
-
-    let geometry = new THREE.BufferGeometry();
-    let material = new THREE.PointsMaterial({ size: 0.05, vertexColors: 2 });  //vertexColors: THREE.VertexColors
-    let points = new THREE.Points(geometry, material);
-    let positions = Float32Array.from(data.getPointList())
-
-    let color = []
-    for (let i = 0; i < data.getPointList().length; i += 3) {
-        color[i] = 0.12;
-        color[i + 1] = 0.565;
-        color[i + 2] = 1;
-    }
-    let colors = new Float32Array(color)
-
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    geometry.center();
-    geometry.rotateX(Math.PI);
-
-    // 沿y轴方向平移一定单位
-    //points.translateY(10);
-    //points.translateX(70);
-    points.name = data.getName();
-
-    // 图像缩放
-    points.scale.set(1.2, 1.2, 1.2);
-    scene.add(points);
-    render();
-}
-
-function onWindowResize() {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    renderer.setSize(width, height);
-    render();
-}
-
-function render() {
-    renderer.render(scene, camera);
+    window.addEventListener('resize', () => {
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
+        renderer.render(scene, camera);
+    });
 }
