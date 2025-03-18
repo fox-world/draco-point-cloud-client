@@ -10,6 +10,7 @@ export const loadDataInfo = async (url) => {
 }
 
 export const decodeDracoData = (decoderModule, rawBuffer) => {
+    let points = [];
     const decoder = new decoderModule.Decoder();
     const buffer = new decoderModule.DecoderBuffer();
     buffer.Init(new Float32Array(rawBuffer), rawBuffer.byteLength);
@@ -26,14 +27,15 @@ export const decodeDracoData = (decoderModule, rawBuffer) => {
     } else {
         const errorMsg = 'Error: Unknown geometry type.';
         console.error(errorMsg);
+        return points;
     }
+    console.log(`Decode status:${status.code()},${status.ok()}`);
     decoderModule.destroy(buffer);
 
     const attrs = {
         POSITION: 3
     };
     const numPoints = dracoGeometry.num_points();
-    let points = [];
     Object.keys(attrs).forEach((attr) => {
         const decoderAttr = decoderModule[attr];
         const attrId = decoder.GetAttributeId(dracoGeometry, decoderAttr);
@@ -50,7 +52,7 @@ export const decodeDracoData = (decoderModule, rawBuffer) => {
         }
         decoderModule.destroy(attributeData);
     });
-    console.log(`Encode finished, decode point size: ` + `${numPoints}`);
+    console.log(`Encode finished, decode point size: ${numPoints}`);
     decoderModule.destroy(decoder);
     decoderModule.destroy(dracoGeometry);
     return points;

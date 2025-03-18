@@ -47,11 +47,6 @@ function playTabProps(index) {
   };
 }
 
-var interval = {
-  'interval0': null,
-  'interval1': null
-}
-
 const { innerHeight: height } = window;
 const playAreaHeight = height - 240;
 const play_pcd_id = 'play_pcd', play_drc_id = 'play_drc';
