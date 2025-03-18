@@ -1,7 +1,8 @@
 import { PcdData } from '../proto/pcd_pb';
-import { request} from '../tools/axios_tools';
+import { request } from '../tools/axios_tools';
 import { initComponments, renderPcd } from '../tools/play_tools';
 
+let renderer, camera, scene;
 export const playPcd = (pId, pHeight, data, playingRef, updateState) => {
     // 进行一些必要的初始化操作
     let parent = document.getElementById(`${pId}`);
@@ -11,8 +12,12 @@ export const playPcd = (pId, pHeight, data, playingRef, updateState) => {
     if (total === 0) {
         return;
     }
-
-    let [renderer, camera, scene] = initComponments(width, pHeight, parent);
+    if (!scene) {
+        let [sRenderer, sCamera, sScene] = initComponments(width, pHeight, parent);
+        renderer = sRenderer;
+        camera = sCamera;
+        scene = sScene;
+    }
     loadPlayPcd(data, playingRef, updateState, renderer, camera, scene);
 };
 

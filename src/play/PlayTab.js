@@ -105,9 +105,16 @@ export function PlayTabs() {
     playing0Ref.current = playing0;
   }, [playing0]);
 
+
   React.useEffect(() => {
     playing1Ref.current = playing1;
   }, [playing1]);
+
+  React.useEffect(() => {
+    if (state1.processCount == 0) {
+       setPlaying1(false);
+    }
+  }, [state1.processCount]);
 
   React.useEffect(() => {
     document.title = "点云播放测试";
