@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-let baseURL = process.env.REACT_APP_BASE_URL;
+let config = await fetch('static/config.json').then((res) => res.json());
+let baseURL = config.baseURL;
 console.log(`base url: ${baseURL}`);
 export const request = axios.create({
     //根据运行环境来选择相应接口地址
