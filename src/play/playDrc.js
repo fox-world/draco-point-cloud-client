@@ -1,8 +1,13 @@
 import axios from 'axios';
 import { PointData } from '../proto/point_pb.js';
 import * as draco3d from 'draco3d';
+import * as THREE from 'three';
+import { decodeDracoData } from './playFunc';
+
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let parent, width, height;
+let camera, scene, renderer;
 let decoderModule = null;
 
 export const playDrc = (pId, pHeight, data, playingRef, updateState) => {
@@ -15,9 +20,9 @@ export const playDrc = (pId, pHeight, data, playingRef, updateState) => {
     if (total === 0) {
         return;
     }
-    let decoderConfig = {
-        wasmUrl: './static/draco_decoder.wasm'
-    };
+    if (!scene) {
+        initComponments();
+    }
     draco3d.createDecoderModule({}).then(module => {
         decoderModule = module;
         console.log('Decoder Module Initialized!');
@@ -36,8 +41,8 @@ export const loadPlayDrc = (data, playingRef, updateState) => {
             return;
         }
         let result = PointData.deserializeBinary(response.data);
-        console.log(result.getIdx() + '\t' + result.getName() + '\t' + result.getPoints().length);
-        //renderPcd(result);
+        let points = decodeDracoData(decoderModule, result.getPoints());
+        renderPcd(points);
         if (count < total) {
             let percent = (count / total * 100).toFixed(2);
             updateState({ 'progress': percent, processCount: count });
@@ -50,3 +55,80 @@ export const loadPlayDrc = (data, playingRef, updateState) => {
         console.log(error);
     });
 };
+
+
+function initComponments() {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(width, height);
+    parent.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(12, width / height, 0.5, 50000);
+    camera.position.z = 310;
+    scene.add(camera);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', render); // use if there is no animation loop
+    controls.target = new THREE.Vector3(0, 0, 1);
+    controls.autoRotate = false;
+    controls.dampingFactor = 0.25;
+
+    // 控制缩放范围
+    //controls.minDistance = 0.1;
+    //controls.maxDistance = 100;
+
+    //scene.add( new THREE.AxesHelper( 1 ) );
+
+    window.addEventListener('resize', onWindowResize);
+}
+
+function renderPcd(data) {
+    // 移除旧点云数据
+    for (let child of scene.children) {
+        if (child.type === 'Points') {
+            scene.remove(child);
+            break;
+        }
+    }
+
+    let geometry = new THREE.BufferGeometry();
+    let material = new THREE.PointsMaterial({ size: 0.05, vertexColors: 2 });  //vertexColors: THREE.VertexColors
+    let points = new THREE.Points(geometry, material);
+    let positions = Float32Array.from(data);
+
+    let color = []
+    for (let i = 0; i < data.length; i += 3) {
+        color[i] = 0.12;
+        color[i + 1] = 0.565;
+        color[i + 2] = 1;
+    }
+    let colors = new Float32Array(color)
+
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.center();
+    geometry.rotateX(Math.PI);
+
+    // 沿y轴方向平移一定单位
+    //points.translateY(10);
+    //points.translateX(70);
+    points.name = 'test.drc';
+
+    // 图像缩放
+    points.scale.set(1.2, 1.2, 1.2);
+    scene.add(points);
+    render();
+}
+
+function onWindowResize() {
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+    render();
+}
+
+function render() {
+    renderer.render(scene, camera);
+}

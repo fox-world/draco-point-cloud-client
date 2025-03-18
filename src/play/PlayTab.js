@@ -86,8 +86,8 @@ export function PlayTabs() {
   };
 
   const startPlayClick = (tabIndex) => {
+    setShowContent(false);
     if (tabIndex === 0) {
-      setShowContent(false);
       setPlaying0(true);
       playPcd(play_pcd_id, playAreaHeight, pcds, playing0Ref, setState0);
     }

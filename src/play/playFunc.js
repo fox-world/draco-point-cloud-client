@@ -9,7 +9,8 @@ export const loadDataInfo = async (url) => {
     }
 }
 
-export const decodeDracoData = (decoderModule, rawBuffer, decoder) => {
+export const decodeDracoData = (decoderModule, rawBuffer) => {
+    const decoder = new decoderModule.Decoder();
     const buffer = new decoderModule.DecoderBuffer();
     buffer.Init(new Float32Array(rawBuffer), rawBuffer.byteLength);
     const geometryType = decoder.GetEncodedGeometryType(buffer);
@@ -32,6 +33,7 @@ export const decodeDracoData = (decoderModule, rawBuffer, decoder) => {
         POSITION: 3
     };
     const numPoints = dracoGeometry.num_points();
+    let points = [];
     Object.keys(attrs).forEach((attr) => {
         const decoderAttr = decoderModule[attr];
         const attrId = decoder.GetAttributeId(dracoGeometry, decoderAttr);
@@ -41,7 +43,6 @@ export const decodeDracoData = (decoderModule, rawBuffer, decoder) => {
         const attribute = decoder.GetAttribute(dracoGeometry, attrId);
         const attributeData = new decoderModule.DracoFloat32Array();
         decoder.GetAttributeFloatForAllPoints(dracoGeometry, attribute, attributeData);
-        let points = [];
         for (let i = 0; i < numValues; i = i + stride) {
             for (let j = i; j < i + stride; j++) {
                 points.push(attributeData.GetValue(j));
@@ -52,4 +53,5 @@ export const decodeDracoData = (decoderModule, rawBuffer, decoder) => {
     console.log(`Encode finished, decode point size: ` + `${numPoints}`);
     decoderModule.destroy(decoder);
     decoderModule.destroy(dracoGeometry);
+    return points;
 }
