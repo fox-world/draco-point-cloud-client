@@ -6,7 +6,7 @@ console.log(`base url: ${baseURL}`);
 export const request = axios.create({
     //根据运行环境来选择相应接口地址
     baseURL: baseURL,
-    timeout: 6000, //设置超时
+    timeout: 60000
 });
 
 /*------------- 拦截器---------*/
